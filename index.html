@@ -3,17 +3,32 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Painted valley</title>
+    <title>Reverence · a painted valley</title>
     <link rel="icon" href="data:," />
     <style>
+      /* Yuji Syuku and Cormorant Garamond, both SIL Open Font License 1.1 (fonts/*-OFL.txt); only the parts of
+         Yuji Syuku the title's characters are in */
+      @font-face {
+        font-family: 'Yuji Syuku';
+        font-display: block;
+        src: url('./fonts/yuji-syuku-latin-400-normal.woff2') format('woff2');
+        unicode-range: U+0000-00FF;
+      }
+      @font-face { font-family: 'Yuji Syuku'; font-display: block; src: url('./fonts/yuji-syuku-28-400-normal.woff2') format('woff2'); unicode-range: U+7511-7513,U+7515-7517,U+751c,U+751e,U+7520-7522,U+7524,U+7526-7527,U+7529-752c,U+752f,U+7536,U+7538-7539,U+753c-7540,U+7543-7544,U+7546-754b,U+754d-7550,U+7552,U+7557,U+755a-755b,U+755d-755f,U+7561-7562,U+7564,U+7566-7567,U+7569,U+756b-756d,U+756f,U+7571-7572,U+7574-757e,U+7581-7582,U+7585-7587,U+7589-758c,U+758f-7590,U+7592-7595,U+7599-759a,U+759c-759d,U+75a2-75a5,U+75b0-75b1,U+75b3-75b5,U+75b7-75b8,U+75ba,U+75bd,U+75bf-75c4,U+75c6,U+75ca,U+75cc-75cf,U+75d3-75d4,U+75d7-75d8,U+75dc-75e1,U+75e3-75e4,U+75e7,U+75ec,U+75ee-75f3,U+75f9,U+75fc,U+75fe-7604,U+7607-760c,U+760f,U+7612-7613,U+7615-7616,U+7618-7619,U+761b-7629,U+762d,U+7630,U+7632-7635,U+7638-763c,U+7640-7641,U+7643-764b,U+764e,U+7655,U+7658-7659,U+765c,U+765f,U+7661-7662,U+7664-7665,U+7667-766a,U+766c-7672,U+7674,U+7676,U+7678,U+7680-7683,U+7685,U+7688,U+768b; }
+      @font-face { font-family: 'Yuji Syuku'; font-display: block; src: url('./fonts/yuji-syuku-90-400-normal.woff2') format('woff2'); unicode-range: U+4e18,U+4fb5,U+5104,U+52c7,U+5353,U+5374,U+53e5,U+587e,U+594f,U+5a20,U+5de1,U+5f18,U+5fcd,U+6291,U+62ab,U+6355,U+6392,U+63da,U+63e1,U+656c,U+6687,U+68b0-68b1,U+68d2,U+68da,U+6b27,U+6cbc,U+7159,U+7344,U+73cd,U+76df,U+790e,U+7cf8,U+8102,U+88c1,U+8aa0,U+8e0f,U+9178,U+92ad,U+9670,U+96c5,U+9cf4,U+9db4,U+ff3e,U+ff6f,U+ff72,U+ff78,U+ff7d,U+ff84,U+ff8c; }
+      @font-face { font-family: 'Yuji Syuku'; font-display: block; src: url('./fonts/yuji-syuku-117-400-normal.woff2') format('woff2'); unicode-range: U+4e,U+a0,U+3000,U+300c-300d,U+4e00,U+4e0a,U+4e2d,U+4e8b,U+4eba,U+4f1a,U+5165,U+5168,U+5185,U+51fa,U+5206,U+5229,U+524d,U+52d5,U+5408,U+554f,U+5831,U+5834,U+5927,U+5b9a,U+5e74,U+5f0f,U+60c5,U+65b0,U+65b9,U+6642,U+6700,U+672c,U+682a,U+6b63,U+6c17,U+7121,U+751f,U+7528,U+753b,U+76ee,U+793e,U+884c,U+898b,U+8a18,U+9593,U+95a2,U+ff01,U+ff08-ff09; }
+      @font-face { font-family: 'Yuji Syuku'; font-display: block; src: url('./fonts/yuji-syuku-118-400-normal.woff2') format('woff2'); unicode-range: U+21-22,U+27-2a,U+2c-3b,U+3f,U+41-4d,U+4f-5d,U+61-7b,U+7d,U+ab,U+ae,U+b2-b3,U+b7,U+bb,U+c9,U+cd,U+d6,U+d8,U+dc,U+e0-e5,U+e7-ed,U+ef,U+f1-f4,U+f6,U+f8,U+fa,U+fc-fd,U+103,U+14d,U+1b0,U+300-301,U+1ebf,U+1ec7,U+2013-2014,U+201c-201d,U+2039-203a,U+203c,U+2048-2049,U+2113,U+2122,U+65e5,U+6708,U+70b9; }
+      @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 400; src: url('./fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2'); }
+      @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 400; font-style: italic; src: url('./fonts/cormorant-garamond-latin-400-italic.woff2') format('woff2'); }
+      @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 600; src: url('./fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2'); }
       html,
       body {
         margin: 0;
         height: 100%;
         overflow: hidden;
-        background: #dfeaf0;
+        background: #07060f;
         color: #24323a;
-        font: 15px/1.4 Georgia, 'Times New Roman', serif;
+        font: 15px/1.4 Cormorant, Georgia, 'Times New Roman', serif;
         user-select: none;
       }
       canvas {
@@ -31,7 +46,10 @@
         pointer-events: none;
       }
       #loading {
-        background: #dfeaf0;
+        background: #07060f;
+        color: #b9b2d6;
+        font: italic 20px Cormorant, Georgia, serif;
+        letter-spacing: 0.3em;
       }
       #start {
         display: none;
@@ -70,8 +88,172 @@
         opacity: 1;
         transition: opacity 0.15s;
       }
-      .ready:not(.playing) #start {
+      .ready:not(.playing):not(.menu) #start {
         display: grid;
+      }
+      .menu #note {
+        display: none;
+      }
+
+      /* ---- the title: a film's opening, over the valley in the wind ---- */
+      #title {
+        position: fixed;
+        inset: 0;
+        display: none;
+        color: #f4ecdc;
+        pointer-events: auto;
+        cursor: default;
+      }
+      .menu #title,
+      .leaving #title {
+        display: block;
+      }
+      .leaving #title {
+        pointer-events: none;
+      }
+      .bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 11vh;
+        background: #020106;
+        transition: transform 1.6s cubic-bezier(0.6, 0, 0.2, 1);
+      }
+      .bar.top { top: 0; }
+      .bar.bottom { bottom: 0; }
+      .leaving .bar.top { transform: translateY(-100%); }
+      .leaving .bar.bottom { transform: translateY(100%); }
+      #shade {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 60% 75% at 12% 45%, rgba(6, 4, 22, 0.7), rgba(6, 4, 22, 0) 72%);
+        pointer-events: none;
+        transition: opacity 1.2s;
+      }
+      .leaving #shade { opacity: 0; }
+      #veil {
+        position: absolute;
+        inset: 0;
+        background: #020106;
+        animation: lift 4.5s ease-out forwards;
+        pointer-events: none;
+      }
+      @keyframes lift { from { opacity: 1; } 35% { opacity: 1; } to { opacity: 0; } }
+      #mark {
+        position: absolute;
+        left: 7vw;
+        top: 17vh;
+        display: flex;
+        gap: 2.4vw;
+        align-items: flex-start;
+        transition: opacity 1.2s, transform 1.6s;
+        text-shadow: 0 0 24px rgba(10, 6, 30, 0.75), 0 0 2px rgba(10, 6, 30, 0.6);
+      }
+      .leaving #mark { opacity: 0; transform: translateY(-2vh); }
+      #kanji {
+        writing-mode: vertical-rl;
+        font: 13vh/1 'Yuji Syuku', serif;
+        letter-spacing: 0.08em;
+        color: #fff6e4;
+        opacity: 0;
+        filter: blur(6px);
+        animation: ink 3.2s 1.2s ease-out forwards;
+      }
+      @keyframes ink { to { opacity: 0.96; filter: blur(0); } }
+      #words {
+        padding-top: 1.8vh;
+        opacity: 0;
+        animation: rise 2.6s 2.6s ease-out forwards;
+      }
+      @keyframes rise { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
+      #words h1 {
+        margin: 0;
+        font: 600 5.2vh/1 Cormorant, serif;
+        letter-spacing: 0.55em;
+        color: #fff3dc;
+      }
+      #words p {
+        margin: 1.4vh 0 0;
+        font: italic 2.3vh/1.3 Cormorant, serif;
+        letter-spacing: 0.12em;
+        color: #e6dbf6;
+      }
+      #words .rule {
+        width: 15vw;
+        height: 2px;
+        margin-top: 2.2vh;
+        background: linear-gradient(90deg, rgba(240, 200, 120, 0.95), rgba(240, 200, 120, 0));
+      }
+      #press {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 15vh;
+        text-align: center;
+        font: italic 2.4vh Cormorant, serif;
+        letter-spacing: 0.4em;
+        color: #f2e8d6;
+        text-shadow: 0 0 14px rgba(10, 6, 30, 0.9);
+        opacity: 0;
+        animation: rise 2s 4.2s ease-out forwards, breathe 3.4s 6.2s ease-in-out infinite;
+      }
+      @keyframes breathe { 50% { opacity: 0.4; } }
+      .chosen #press { display: none; }
+      .chosen #hint { display: block; }
+      #items {
+        position: absolute;
+        left: 7vw;
+        bottom: 16vh;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: none;
+        text-shadow: 0 0 16px rgba(10, 6, 30, 0.9);
+      }
+      .chosen #items { display: block; animation: rise 1.2s ease-out both; }
+      .leaving #items { opacity: 0; transition: opacity 0.6s; }
+      #items li {
+        position: relative;
+        padding: 0.7vh 0 0.7vh 2.4vw;
+        font: 3vh/1.2 Cormorant, serif;
+        letter-spacing: 0.22em;
+        color: rgba(244, 236, 220, 0.62);
+        cursor: pointer;
+        transition: color 0.3s, transform 0.4s;
+      }
+      #items li small {
+        font-style: italic;
+        letter-spacing: 0.12em;
+        color: rgba(230, 210, 170, 0.85);
+        margin-left: 0.8em;
+      }
+      #items li::before {
+        /* a stroke of gold ink beside the one chosen */
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 1.6vw;
+        height: 3px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, rgba(240, 196, 110, 0), rgba(240, 196, 110, 1));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s;
+      }
+      #items li.on {
+        color: #fff8ea;
+        transform: translateX(0.5vw);
+      }
+      #items li.on::before { transform: scaleX(1); }
+      #hint {
+        display: none;
+        position: absolute;
+        right: 5vw;
+        bottom: 4vh;
+        font: italic 1.7vh Cormorant, serif;
+        letter-spacing: 0.14em;
+        color: rgba(220, 210, 235, 0.55);
       }
     </style>
   </head>
@@ -80,11 +262,33 @@
     <div id="start">
       <div>
         <b>Click to walk</b>
-        <span>W A S D · Shift to sprint · Alt to walk · V first person · T for time of day</span>
+        <span>W A S D · Shift to sprint · F to draw or sheathe · V first person · T for time of day</span>
       </div>
     </div>
     <div id="note"></div>
-    <div id="loading">Painted valley</div>
+    <div id="title">
+      <div id="shade"></div>
+      <div class="bar top"></div>
+      <div class="bar bottom"></div>
+      <div id="mark">
+        <div id="kanji">畏敬</div>
+        <div id="words">
+          <h1>REVERENCE</h1>
+          <p>a wandering beneath the heavens</p>
+          <p>in memory of Fable</p>
+          <div class="rule"></div>
+        </div>
+      </div>
+      <div id="press">press any key</div>
+      <ul id="items">
+        <li data-item="begin" class="on">Begin the walk</li>
+        <li data-item="hour">Hour<small id="hourName">Golden hour</small></li>
+        <li data-item="brush">Brush<small id="brushName">On</small></li>
+      </ul>
+      <div id="hint">↑ ↓ to choose · ← → to change · enter</div>
+      <div id="veil"></div>
+    </div>
+    <div id="loading">Reverence</div>
     <script type="module" src="./src/valley/main.js"></script>
   </body>
 </html>

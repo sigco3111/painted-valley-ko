@@ -1,5 +1,6 @@
-// A walk through one summer valley, in first person. There is nothing to do here but walk and look: this file is
-// the walker, the camera and the page. The grass comes from src/lib; the land, the sky, the clouds and the far
+// Reverence: a walk through one summer valley under the heavens, with a sword at your side. It opens on a title, the
+// wanderer standing in the wind with his blade drawn under a vast moon; begin, and he sheathes it and walks. This
+// file is the title, the walker, the camera and the page. The grass comes from src/lib; the land, the sky, the clouds and the far
 // country from the files beside this one. On Patch the page is a block's demo, and talks to the block's page
 // through lib/patch-block.js.
 import { patchBlock } from 'patch-block';
@@ -11,6 +12,7 @@ import RAPIER from '../figure/rapier/rapier.mjs';
 import * as THREE from 'three';
 import { bakeGround, createField, createFrame, loadGroundTextures } from '../lib/index.js';
 import { createFluff, createStones } from './dressing.js';
+import { createKatana } from './katana.js';
 import { createFarWoods } from './farwoods.js';
 import { createFloor, FLOOR, paintFloor } from './floor.js';
 import { createHorizon } from './horizon.js';
@@ -80,7 +82,7 @@ const quality = params.get('quality') ?? 'high';
 const EXTENT = 1280;
 const GROUND = { extent: EXTENT, extentRes: EXTENT, centre: [0, 0] };
 const FLOOR_SIZE = quality === 'low' ? 1024 : 1536;
-const hour0 = params.has('hour') ? Number(params.get('hour')) : 15.5;
+const hour0 = params.has('hour') ? Number(params.get('hour')) : 19;
 const groundJob = offThread({ job: 'ground', ...GROUND }, () => bakeGround({ heightAt, paint, ...GROUND }));
 const floorJob = offThread({ job: 'floor', size: FLOOR_SIZE }, () => ({ pixels: paintFloor(FLOOR_SIZE) }));
 await stage(0.04, 'Painting the sky');
@@ -365,6 +367,8 @@ const physics = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
 }
 const wanderer = await wandererComing;
 scene.add(wanderer.group);
+const katana = createKatana(wanderer, { onDraw: () => sounds.draw(), onSheathe: () => sounds.sheathe() });
+wanderer.group.add(katana.group);
 const animator = new Animator(wanderer.man);
 const walker = new Walker({ RAPIER, world: physics, man: wanderer.man, animator, spawn: new THREE.Vector3(player.x, player.y, player.z), yaw: player.yaw + Math.PI });
 const follow = new Follow(camera);
@@ -427,6 +431,13 @@ function air(x, y, z, out) {
 
 function updateWanderer(dt) {
   const inp = input.read(dt);
+  if (title.on) {
+    // under the title he only stands, and the mouse turns nothing
+    inp.move = { x: 0, y: 0 };
+    inp.jump = false;
+    inp.look = { x: 0, y: 0 };
+    inp.zoom = 0;
+  }
   held.copy(walker.feet);
   const bodyWas = walker.body.translation();
   walker.update(dt, inp, follow.yaw);
@@ -455,6 +466,7 @@ function updateWanderer(dt) {
   else animator.leanInto(dt, 0, 0, 0);
   animator.placeFeet(dt, (x, z, from) => walker.ground(x, z, from, 1.4), at.y, onGround ? 1 : 0);
   man.updateMatrixWorld(true);
+  katana.update(dt, animator);
   // a step is heard when a foot of his comes down, and at no other time: louder the faster he goes
   // (a foot has landed when its ankle, having swung clear of the ground, is back down by it)
   sinceStep += dt;
@@ -483,13 +495,151 @@ function updateWanderer(dt) {
   const flat = Math.hypot(sky.sunDir.x, sky.sunDir.z);
   field.uniforms.uWalker.value.set(at.x, at.z, 0.72, Math.min(9, (1.75 * flat) / Math.max(0.05, sky.sunDir.y)));
 
-  if (!window.__tg?.view) {
+  if (title.on && !window.__tg?.view) titleCamera(dt, at);
+  else if (!window.__tg?.view) {
     follow.update(dt, at, inp.look, inp.zoom, () => null, (x, z) => field.heightAt(x, z) + 0.5);
+    // from the title's view down to the one behind him
+    if (title.leave < 1) {
+      title.leave = Math.min(1, title.leave + dt / 2.4);
+      const k = title.leave * title.leave * (3 - 2 * title.leave);
+      camera.position.lerpVectors(title.from, camera.position, k);
+      camera.quaternion.slerpQuaternions(title.fromQ, camera.quaternion, k);
+      camera.fov = 40 + (52 - 40) * k;
+      camera.updateProjectionMatrix();
+    }
     camera.updateMatrixWorld();
     // (should you step into your own eyes, you look the way the camera did)
     player.yaw = follow.yaw - Math.PI;
     player.pitch = -follow.pitch;
   }
+}
+
+// ---- the title ------------------------------------------------------------------------------------------------
+const title = { on: false, chosen: false, time: 0, item: 0, leave: 1, from: new THREE.Vector3(), fromQ: new THREE.Quaternion() };
+const titleLook = new THREE.Vector3();
+/**
+ * The film's opening shot: low in the grass behind him and to one side, looking past him to the moon, drifting
+ * slowly round as the wind goes over.
+ */
+function titleCamera(dt, at) {
+  title.time += dt;
+  const t = title.time;
+  const moon = sky.uniforms.uMoonDir.value;
+  const flat = Math.hypot(moon.x, moon.z);
+  const mx = moon.x / flat;
+  const mz = moon.z / flat;
+  // round from behind him towards his right, a few degrees a minute
+  const swing = 0.27 + 0.05 * Math.sin(t * 0.045) + Math.min(0.06, t * 0.002);
+  const far = 5.6 - 0.6 * Math.min(1, t / 40);
+  const cx = Math.cos(swing) * -mx - Math.sin(swing) * -mz;
+  const cz = Math.sin(swing) * -mx + Math.cos(swing) * -mz;
+  const x = at.x + cx * far;
+  const z = at.z + cz * far;
+  camera.position.set(x, Math.max(field.heightAt(x, z) + 0.8, at.y + 0.75) + 0.04 * Math.sin(t * 0.3), z);
+  // look past him, up to the moon, with him on the right third
+  // (turned a little left of the moon, so it stands right of the title)
+  const lx = mx * Math.cos(0.2) + mz * Math.sin(0.2);
+  const lz = -mx * Math.sin(0.2) + mz * Math.cos(0.2);
+  titleLook.set(at.x + lx * 30, at.y + 9, at.z + lz * 30);
+  camera.lookAt(titleLook);
+  if (camera.fov !== 40) {
+    camera.fov = 40;
+    camera.updateProjectionMatrix();
+  }
+  camera.updateMatrixWorld();
+}
+const TITLE_ITEMS = ['begin', 'hour', 'brush'];
+function titleSelect(i) {
+  title.item = (i + TITLE_ITEMS.length) % TITLE_ITEMS.length;
+  document.querySelectorAll('#items li').forEach((li, k) => li.classList.toggle('on', k === title.item));
+}
+function titleChange(item, step) {
+  if (item === 'hour') {
+    const at = Math.max(0, TIMES.findIndex((time) => Math.abs(time.hour - sky.hour) < 0.05));
+    const time = TIMES[(at + step + TIMES.length) % TIMES.length];
+    setHour(time.hour);
+    $('hourName').textContent = time.name;
+  }
+  if (item === 'brush') {
+    frame.paint = frame.paint ? 0 : paintWas;
+    $('brushName').textContent = frame.paint ? 'On' : 'Off';
+  }
+}
+function showTitle() {
+  title.on = true;
+  title.time = 0;
+  drift = 0;
+  document.body.classList.add('menu');
+  input.lockable = false;
+  setThird(true);
+  // facing the moon
+  const moon = sky.uniforms.uMoonDir.value;
+  standAt(START[0], START[1], Math.atan2(moon.x, moon.z));
+  katana.set(true);
+  setWind(8.5);
+}
+/** Choosing at the title: the first key or click shows the choices; a choice made, or a step taken, begins. */
+function titleChoose() {
+  sounds.start();
+  if (!title.chosen) {
+    title.chosen = true;
+    document.body.classList.add('chosen');
+  }
+}
+function begin() {
+  if (!title.on) return;
+  sounds.start();
+  title.on = false;
+  title.leave = 0;
+  title.from.copy(camera.position);
+  title.fromQ.copy(camera.quaternion);
+  // he turns the way he was facing, and the eye comes round behind him
+  follow.yaw = walker.yaw;
+  follow.pitch = 0.12;
+  follow.pivot.set(0, 0, 0);
+  follow.distance = follow.want;
+  input.lockable = true;
+  document.body.classList.remove('menu', 'chosen');
+  document.body.classList.add('leaving');
+  setTimeout(() => document.body.classList.remove('leaving'), 1800);
+  setTimeout(() => katana.drawn && katana.toggle(), 500);
+  drift = 1;
+  if (!stepped && document.pointerLockElement !== canvas) canvas.requestPointerLock()?.catch?.(() => {});
+}
+$('title').addEventListener('pointerdown', (e) => {
+  const li = e.target.closest?.('li');
+  if (!title.chosen) return void titleChoose();
+  if (!li) return;
+  const item = li.dataset.item;
+  titleSelect(TITLE_ITEMS.indexOf(item));
+  if (item === 'begin') begin();
+  else titleChange(item, 1);
+});
+$('items').addEventListener('pointerover', (e) => {
+  const li = e.target.closest?.('li');
+  if (li) titleSelect(TITLE_ITEMS.indexOf(li.dataset.item));
+});
+/** A key while the title is up. Returns true if the title took it. */
+function titleKey(e) {
+  if (!title.on) return false;
+  if (['KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) {
+    begin();
+    return true;
+  }
+  if (!title.chosen) {
+    titleChoose();
+    return true;
+  }
+  if (e.code === 'ArrowUp') titleSelect(title.item - 1);
+  if (e.code === 'ArrowDown') titleSelect(title.item + 1);
+  const item = TITLE_ITEMS[title.item];
+  if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') titleChange(item, e.code === 'ArrowLeft' ? -1 : 1);
+  if (e.code === 'Enter' || e.code === 'Space') {
+    if (item === 'begin') begin();
+    else titleChange(item, 1);
+  }
+  if (/^Arrow|^Enter$|^Space$/.test(e.code)) e.preventDefault();
+  return true;
 }
 
 function placeCamera() {
@@ -543,6 +693,7 @@ function setWind(speed) {
 }
 
 canvas.addEventListener('click', () => {
+  if (title.on) return;
   sounds.start();
   if (document.pointerLockElement !== canvas) canvas.requestPointerLock()?.catch?.(() => {});
 });
@@ -558,7 +709,9 @@ document.addEventListener('mousemove', (e) => {
   player.pitch = Math.min(1.45, Math.max(-1.45, player.pitch - e.movementY * 0.0021));
 });
 document.addEventListener('keydown', (e) => {
+  if (titleKey(e)) return;
   keys.add(e.code);
+  if (e.code === 'KeyF' && third && katana.toggle()) note(katana.drawn ? 'Draw' : 'Sheathe');
   // (after the last of them, round to the first again)
   if (e.code === 'KeyT') pickTime(Math.max(0, TIMES.findIndex((time) => time.hour > sky.hour + 0.05)));
   for (let i = 0; i < TIMES.length; i++) if (e.code === `Digit${i + 1}`) pickTime(i);
@@ -623,7 +776,9 @@ function tick(dt) {
   }
   const tarn = 1 - Math.min(1, Math.max(0, (tarnDistance(player.x, player.z) - 1) / 1.6));
   const gust = 0.5 + 0.5 * Math.sin(clock * 0.23) * Math.sin(clock * 0.37 + 1);
-  sounds.update(dt, { wind: wind.speed, gust, tree, tarn, dusk: Math.min(1, Math.max(0, (sky.hour - 18.8) / 1.4)) });
+  sounds.update(dt, { wind: wind.speed, gust, tree, tarn, dusk: Math.min(1, Math.max(0, (sky.hour - 18.8) / 1.4)), title: title.on });
+  // the wind of the title falls to the valley's own once the walk begins
+  if (!title.on && wind.speed > 4.5) setWind(wind.speed - dt * 0.8);
   sky.update(dt, camera);
   frame.exposure = sky.exposure;
   frame.render(scene, camera);
@@ -649,7 +804,7 @@ mark('sceneShaders');
 await stage(0.9, 'Warming up');
 // real frames, each waited for, so the first the walker sees isn't the one that compiles: a full turn of the
 // clouds' strips, a few steps taken and the grass trodden
-{
+if (!params.has('fast')) {
   const [x0, z0] = [player.x, player.z];
   keys.add('KeyW');
   input.keys.add('KeyW');
@@ -664,14 +819,20 @@ await stage(0.9, 'Warming up');
   if (third) setThird(true);
   field.reset();
   clock = 0;
-  setHour(params.has('hour') ? Number(params.get('hour')) : 15.5);
+  setHour(hour0);
   tick(1 / 60);
   await gpuDone();
 }
 mark('warm');
+// the title, unless asked to begin at once (?notitle) or drawn by a test that places the eye itself
+if (!params.has('notitle') && third) {
+  showTitle();
+  $('hourName').textContent = TIMES.find((time) => Math.abs(time.hour - sky.hour) < 0.05)?.name ?? 'Golden hour';
+  tick(1 / 60);
+}
 
 // for tests and filming: everything the page is made of, and a clock to drive by hand
-window.__tg = { sounds, walker, follow, input, wanderer, animator, setThird, standAt, pickTime, timings, view: null, wind, THREE, renderer, scene, camera, field, frame, sky, trees, farWoods, stones, player, keys, tick, setHour, setWind, fromValley, ready: true };
+window.__tg = { title, begin, katana, sounds, walker, follow, input, wanderer, animator, setThird, standAt, pickTime, timings, view: null, wind, THREE, renderer, scene, camera, field, frame, sky, trees, farWoods, stones, player, keys, tick, setHour, setWind, fromValley, ready: true };
 
 // ---- the loop's switch ----------------------------------------------------------------------------------------
 let last = 0;

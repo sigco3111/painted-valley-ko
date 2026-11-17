@@ -1,5 +1,9 @@
 # Credits
 
+Reverence is a remix of Patch's painted valley (`blendi/painted-valley`), with a title, a sword and the heavens added, in memory of Fable.
+
+- Fonts: Yuji Syuku (the Yuji Project Authors) and Cormorant Garamond (Christian Thalmann), both SIL Open Font License 1.1, see `fonts/`.
+
 - The grass, flowers and frame finish come from Patch's grass block (`blendi/touch-grass`), restyled here.
 - Ground048 and Ground103 by ambientCG (https://ambientcg.com), CC0 1.0. The earth of the footpaths.
 - Footsteps on grass: Kenney's Impact Sounds (https://kenney.nl), CC0 1.0.

@@ -3,6 +3,25 @@ kind: effect
 engine: three.js
 ---
 
+# Reverence
+
+*A remix of [painted valley](https://patch.gg/blendi/painted-valley), in memory of Fable.*
+
+It opens like a film: black bars, the wind going over the grass, a wanderer standing with his katana drawn under a vast moon, and the title written in brush. Press a key for the choices (begin, the hour, the brush finish) and begin: he sheathes his blade, the bars draw back and the eye comes down behind him. Above the painted day the heavens show through: a river of nebula, two far spirals, stars, and a moon with a halo, faint at noon and full by sunset.
+
+**Added keys:** F draws or sheathes the katana. At the title, W A S D begin at once.
+
+| | |
+|---|---|
+| `src/valley/katana.js` | The sword and scabbard, the draw and the sheathe |
+| `src/valley/sky.js` | `heavens()` and `moon()`: the nebula, spirals, stars and moon; `sky.cosmos` overrides how much shows |
+| `src/valley/main.js` | The title: its camera, its choices and the way down into the walk |
+| `src/valley/sounds.js` | The draw and sheathe, the wind and the held chord, all made from noise and tones |
+
+`?notitle` skips the title; `?hour=15.5` starts at another hour (the title starts at golden hour).
+
+---
+
 # Painted valley
 
 A summer valley to walk through, drawn in the look of hand-painted animated film backgrounds: flat, clean colour, heaped white cloud, far mountains with every face painted, a village of tiled roofs, and a meadow whose brush marks stay round under your feet. A wanderer in a straw hat and a blue cloak walks it, drawn as a film draws its people: flat colour and an inked line. The land and sky are made in code, in three.js.

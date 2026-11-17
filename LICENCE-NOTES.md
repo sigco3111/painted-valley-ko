@@ -1,4 +1,4 @@
-# Licence notes: painted valley
+# Licence notes: Reverence (a remix of painted valley)
 
 Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11.
 
@@ -15,6 +15,9 @@ Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11.
 | `public/textures/Ground048_*`, `Ground103_*` | ambientCG (https://ambientcg.com), Ground048 and Ground103, 1K JPEG maps | CC0 1.0 | Yes, in Git LFS |
 | `public/audio/footstepOnGrass*.ogg` | Kenney's Impact Sounds, through Patch's asset library (`kenney:impact-sounds/footstep_grass_000` to `_004`) | CC0 1.0 | Yes |
 | `public/audio/summer.ogg`, `leaves.ogg`, `grass.ogg`, `lake.ogg`, `crickets.ogg` | Cut from the Sonniss GDC Game Audio Bundles (2017, 2018, 2019). The exact recordings are in `MISSING_ASSETS.md` | Sonniss GDC bundle licence: use in a game, not to be passed on as files | **No.** In the released demo only |
+| `src/valley/katana.js`, the title in `index.html` and `main.js`, the heavens in `sky.js`, the synthesized sounds in `sounds.js` | Written for this remix (majveia/painted-valley). The sword, scabbard, moon, nebula, stars and every sound added are made in code | MIT; what it draws CC0 | Yes |
+| `public/fonts/yuji-syuku-*.woff2` | Yuji Syuku by the Yuji Project Authors, through Fontsource; only the subsets the title's characters are in | SIL Open Font License 1.1, `public/fonts/YujiSyuku-OFL.txt` | Yes |
+| `public/fonts/cormorant-garamond-*.woff2` | Cormorant Garamond by Christian Thalmann, through Fontsource | SIL Open Font License 1.1, `public/fonts/CormorantGaramond-OFL.txt` | Yes |
 | `lib/patch-block.js` | Patch's block helper, from staging.patch.gg/patch-block.js | Patch's, shipped with every block | Yes |
 | `shots/` | Stills of this demo | CC0 1.0, Patch | Yes, in Git LFS |
 | three.js 0.186.1 | npm | MIT | Installed by npm; its notice ships as `THIRD-PARTY-NOTICES.md` |

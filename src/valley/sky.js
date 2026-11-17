@@ -144,6 +144,121 @@ uniform samplerCube tClouds;
 uniform sampler2D tBack0, tBack1, tBack2;
 uniform vec3 uBankLit, uBankShade;
 uniform vec2 uBackdropEl;
+// The heavens behind the painted day: a river of nebula, two far spirals, the stars and a vast moon. uCosmos is
+// how much of it shows through, from a ghost of it at noon to all of it at sunset.
+uniform float uCosmos;
+uniform vec3 uMoonDir;
+uniform mat3 uGalaxy;
+
+float keepSharp = 0.0;
+float h31(vec3 p) {
+  p = fract(p * 0.1031);
+  p += dot(p, p.zyx + 31.32);
+  return fract((p.x + p.y) * p.z);
+}
+float vnoise(vec3 p) {
+  vec3 i = floor(p);
+  vec3 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(h31(i), h31(i + vec3(1, 0, 0)), f.x), mix(h31(i + vec3(0, 1, 0)), h31(i + vec3(1, 1, 0)), f.x), f.y),
+             mix(mix(h31(i + vec3(0, 0, 1)), h31(i + vec3(1, 0, 1)), f.x), mix(h31(i + vec3(0, 1, 1)), h31(i + vec3(1, 1, 1)), f.x), f.y), f.z);
+}
+float fbm(vec3 p) {
+  float s = 0.0, a = 0.5;
+  for (int i = 0; i < 5; i++) { s += a * vnoise(p); p = p * 2.03 + 17.1; a *= 0.5; }
+  return s;
+}
+// a painter's tones: a few flat steps with a short soft turn between them
+float tones(float v, float n) { float x = v * n; return (floor(x) + smoothstep(0.42, 0.58, fract(x))) / n; }
+
+// one far spiral, seen at a slant
+vec3 spiral(vec3 d, vec3 at, vec3 up, float size, vec3 tint) {
+  vec3 r = normalize(cross(up, at));
+  vec3 u = cross(at, r);
+  float f = dot(d, at);
+  if (f < 0.9) return vec3(0.0);
+  vec2 q = vec2(dot(d, r), dot(d, u)) / size;
+  q.y /= 0.42;
+  float rad = length(q);
+  float arms = 0.5 + 0.5 * cos(2.0 * (atan(q.y, q.x) - 2.6 * log(rad + 0.05)) );
+  float body = exp(-rad * 2.6) * (0.35 + 0.65 * arms) + exp(-rad * rad * 60.0) * 1.6;
+  return tint * tones(clamp(body, 0.0, 1.2) / 1.2, 4.0) * 1.2;
+}
+
+vec4 heavens(vec3 d, float sd) {
+  vec3 g = uGalaxy * d;
+  // the river of the galaxy: a band across the sky, torn by lanes of dust
+  float lat = g.y + 0.12 * (fbm(g * 2.1) - 0.5);
+  float band = exp(-lat * lat / 0.05);
+  float cloud = fbm(g * 3.4 + vec3(0.0, 0.0, uTime * 0.002));
+  float dust = smoothstep(0.48, 0.62, fbm(g * 6.5 + 4.0)) * exp(-lat * lat / 0.012);
+  float neb = clamp(band * (0.25 + 1.1 * cloud * cloud) - dust * 0.7, 0.0, 1.0);
+  float t = tones(neb, 5.0);
+  vec3 deep = vec3(0.05, 0.03, 0.16);
+  vec3 violet = vec3(0.34, 0.12, 0.55);
+  vec3 rose = vec3(0.95, 0.32, 0.55);
+  vec3 gold = vec3(1.6, 1.05, 0.55);
+  vec3 col = mix(deep, violet, smoothstep(0.0, 0.4, t));
+  col = mix(col, rose, smoothstep(0.35, 0.7, t));
+  col = mix(col, gold, smoothstep(0.72, 1.0, t));
+  // a cool veil of teal beside the river
+  float veil = smoothstep(0.55, 0.75, fbm(g * 2.2 + 9.0)) * exp(-pow(lat - 0.28, 2.0) / 0.03);
+  col = mix(col, vec3(0.12, 0.55, 0.62), tones(veil, 3.0) * 0.8);
+  float amount = max(t, veil * 0.8);
+  // two far spirals
+  col += spiral(d, normalize(uGalaxy[1] * 0.3 + vec3(0.55, 0.62, -0.4)), vec3(0.3, 1.0, 0.2), 0.07, vec3(0.9, 0.75, 1.1));
+  col += spiral(d, normalize(vec3(-0.7, 0.42, 0.45)), vec3(-0.4, 1.0, 0.1), 0.045, vec3(0.6, 0.85, 1.2));
+  // the stars: one in each cell of the sky at most, more of them along the river
+  vec3 q = d * 210.0;
+  vec3 cell = floor(q);
+  float star = 0.0;
+  vec3 starTint = vec3(1.0);
+  for (int k = 0; k < 2; k++) {
+    vec3 c = cell + (k == 0 ? vec3(0.0) : vec3(0.5));
+    vec3 cc = floor(c);
+    float r = h31(cc);
+    if (r < 0.2 + 0.55 * band) {
+      vec3 p = cc + 0.25 + 0.5 * vec3(h31(cc + 1.3), h31(cc + 2.7), h31(cc + 4.1)) - (k == 0 ? vec3(0.0) : vec3(0.5));
+      float dd = length(q - p);
+      float size = 0.05 + 0.14 * pow(h31(cc + 7.7), 6.0);
+      float tw = 0.75 + 0.25 * sin(uTime * (1.5 + 3.0 * h31(cc + 9.1)) + r * 40.0);
+      float s = smoothstep(size + 0.06, size, dd) * tw * (0.4 + 1.8 * pow(h31(cc + 5.5), 3.0));
+      if (s > star) { star = s; starTint = mix(vec3(0.7, 0.8, 1.3), vec3(1.4, 1.05, 0.7), h31(cc + 3.3)); }
+    }
+  }
+  col += starTint * star * 2.2;
+  keepSharp = star;
+  return vec4(col, clamp(amount + star, 0.0, 1.0));
+}
+
+// the vast moon: a disc in two tones of paint, lit from the side the sun is on, with a halo round it
+vec3 moon(vec3 d, vec3 col, out float cover) {
+  cover = 0.0;
+  float R = 0.115;
+  vec3 m = normalize(uMoonDir);
+  float f = dot(d, m);
+  float ang = acos(clamp(f, -1.0, 1.0));
+  // the halo: a soft glow and a thin ring, as the old paintings give a holy thing
+  float halo = exp(-max(ang - R, 0.0) * 11.0) * 0.45 + smoothstep(0.007, 0.0, abs(ang - R * 1.45)) * 0.28 + smoothstep(0.004, 0.0, abs(ang - R * 1.9)) * 0.1;
+  col += vec3(0.9, 0.85, 1.2) * halo * uCosmos;
+  if (ang > R + 0.004) return col;
+  vec3 r = normalize(cross(vec3(0.0, 1.0, 0.0), m));
+  vec3 u = cross(m, r);
+  vec2 q = vec2(dot(d, r), dot(d, u)) / R;
+  float z = sqrt(max(0.0, 1.0 - dot(q, q)));
+  vec3 n = normalize(q.x * r + q.y * u + z * -m);
+  // the sun's side of it lit, the far side in a cool shade that still glows
+  vec3 s = normalize(uSunDir - m * dot(uSunDir, m) * 0.6);
+  float lit = smoothstep(-0.04, 0.04, dot(n, s) + 0.15);
+  float maria = smoothstep(0.52, 0.56, fbm(vec3(q * 2.6, 3.0)));
+  float crater = smoothstep(0.62, 0.64, fbm(vec3(q * 7.0, 8.0)));
+  vec3 litPaint = mix(vec3(2.1, 1.95, 1.7), vec3(1.45, 1.35, 1.4), maria);
+  litPaint = mix(litPaint, vec3(1.7, 1.55, 1.5), crater * 0.6);
+  vec3 shadePaint = mix(vec3(0.16, 0.15, 0.36), vec3(0.11, 0.1, 0.28), maria);
+  vec3 disc = mix(shadePaint, litPaint, lit);
+  cover = smoothstep(R + 0.004, R, ang) * uCosmos;
+  return mix(col, disc, cover);
+}
 
 void main() {
   vec3 d = normalize(vDir);
@@ -152,7 +267,20 @@ void main() {
   col = mix(col, uZenith, smoothstep(0.18, 0.85, h));
   float sd = max(dot(d, uSunDir), 0.0);
   col += uGlow * (pow(sd, 6.0) * 0.05 + pow(sd, 90.0) * 0.3 + pow(sd, 1400.0) * 1.4) + uSunColor * smoothstep(0.99988, 0.99996, sd) * 8.0;
+  // the heavens show through the day's blue, most of all overhead
+  {
+    vec4 hv = heavens(d, sd);
+    float above = smoothstep(-0.02, 0.35, d.y);
+    float through = uCosmos * above;
+    col = mix(col, col * 0.3 + vec3(0.02, 0.01, 0.07), through * 0.85 * smoothstep(-0.05, 0.55, d.y));
+    col += hv.rgb * hv.a * through * (0.55 + 0.45 * uCosmos);
+    float mc;
+    col = moon(d, col, mc);
+    keepSharp *= through * (1.0 - mc);
+  }
   vec4 c = texture(tClouds, d);
+  // under the heavens the high clouds thin away, and the low banks stay
+  c *= 1.0 - 0.7 * uCosmos * smoothstep(0.12, 0.45, d.y);
   // towards the sun a cloud's edge is lit through
   c.rgb += uGlow * pow(sd, 40.0) * 0.5 * c.a * (1.0 - c.a) * 4.0;
   col = col * (1.0 - c.a) + c.rgb;
@@ -180,10 +308,13 @@ void main() {
       vec3 cloud = mix(uBankShade, uBankLit, clamp(b2.a * inv / max(bank, 1e-3), 0.0, 1.0) * (0.2 + 0.8 * smoothstep(0.04, 0.4, uSunDir.y)));
       land = mix(land, mix(cloud, air, 0.18), bank);
       col = mix(col, land, b0.a);
+      keepSharp *= 1.0 - b0.a;
       done = b0.a * (1.0 - bank);
     }
   }
   // (alpha marks what is painted already and wants no more of the brush: the far country)
+  // (the stars are left out of the brush, or it would wipe them away)
+  done = max(done, smoothstep(0.04, 0.25, keepSharp * (1.0 - c.a)) * 0.72);
   outC = vec4(col, 1.0 - 0.75 * done);
 }
 `;
@@ -234,7 +365,22 @@ export function createSky(renderer, field, { parts = null, ...options } = {}) {
     uBackdropEl: { value: new THREE.Vector2(backdrop.el[0], backdrop.el[1]) },
     uBankLit: { value: new THREE.Color() },
     uBankShade: { value: new THREE.Color() },
+    uCosmos: { value: 0.5 },
+    uMoonDir: { value: new THREE.Vector3() },
+    uGalaxy: { value: new THREE.Matrix3() },
   };
+  {
+    // the moon stands a little to the right of where the sun goes down, high and vast
+    const [dx, dz] = HERO;
+    const a = THREE.MathUtils.degToRad(-30);
+    const el = THREE.MathUtils.degToRad(21);
+    const hx = Math.cos(a) * dx + Math.sin(a) * dz;
+    const hz = Math.cos(a) * dz - Math.sin(a) * dx;
+    uniforms.uMoonDir.value.set(hx * Math.cos(el), Math.sin(el), hz * Math.cos(el)).normalize();
+    // the galaxy's plane, tilted so its river arcs up from the mountains past the moon and over
+    const m = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(1.05, Math.atan2(dx, dz) + 0.9, 0.35, 'YXZ'));
+    uniforms.uGalaxy.value.setFromMatrix4(m.invert());
+  }
   const material = new THREE.ShaderMaterial({ glslVersion: THREE.GLSL3, vertexShader: vertex, fragmentShader: fragment, uniforms, side: THREE.BackSide, depthWrite: false, depthTest: true });
   const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 4), material);
   mesh.frustumCulled = false;
@@ -255,8 +401,11 @@ export function createSky(renderer, field, { parts = null, ...options } = {}) {
      * hour: 12 to sunset. `soft` for a small step, as time passing makes: the clouds then take the new light a
      * strip at a time as they billow, and nothing is drawn again at once.
      */
+    /** How much of the heavens shows; null follows the hour. */
+    cosmos: null,
     setHour(hour, soft = false) {
       sky.hour = hour;
+      uniforms.uCosmos.value = sky.cosmos ?? 0.38 + 0.62 * THREE.MathUtils.smoothstep(hour, 14, 20.2);
       const e = sunAt(hour, sunDir);
       sky.elevation = e;
       const k = blend(e);

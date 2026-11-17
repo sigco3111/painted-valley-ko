@@ -23,6 +23,8 @@ in vec3 vBind;
 in float vFold;
 in vec2 vCloth;
 uniform vec3 uTrim;
+uniform float uBlade;
+uniform float uGleam;
 layout(location = 0) out vec4 outC;
 void main() {
   vec3 N = normalize(vN);
@@ -60,6 +62,13 @@ void main() {
   // three tones in all: in the light, in the shade, and the deep of a fold
   vec3 col = mix(shadePaint * sky, litPaint * sun, lit * (1.0 - deep));
   col = mix(col, shadePaint * sky * vec3(0.64, 0.64, 0.8), deep * (1.0 - lit));
+  if (uBlade > 0.5) {
+    // the steel: a wavy line of paler, harder steel along the edge, and a line of light that runs the length of
+    // the blade as it is drawn (vCloth: 0 at the back of the blade to 1 at the edge, 0 at the guard to 1 at the tip)
+    float line = 0.56 + 0.06 * sin(vCloth.y * 52.0) + 0.03 * sin(vCloth.y * 127.0 + 1.0);
+    col = mix(col, col * 1.3 + vec3(0.05, 0.06, 0.1), smoothstep(line, line + 0.03, vCloth.x));
+    col += vec3(2.4, 2.3, 2.7) * exp(-pow((vCloth.y - uGleam) * 8.0, 2.0)) * step(-0.9, uGleam);
+  }
   outC = vec4(applyFog(col, vWorld), lower ? uInk.y : uInk.x);
 }
 `;
@@ -117,11 +126,16 @@ export const CLOTHES = {
   BOOTS: [[0.3, 0.19, 0.12], [0.15, 0.09, 0.08]],
   HAIR: [[0.24, 0.15, 0.09], [0.11, 0.07, 0.07]],
   EYES: [[0.08, 0.06, 0.06], [0.06, 0.05, 0.06]],
+  // the katana: bright steel, a dark-wrapped hilt, a guard of old gold, a scabbard of black lacquer
+  BLADE: [[0.88, 0.92, 1.0], [0.34, 0.38, 0.56]],
+  TSUKA: [[0.2, 0.15, 0.24], [0.08, 0.06, 0.12]],
+  TSUBA: [[0.98, 0.74, 0.32], [0.5, 0.3, 0.2]],
+  SAYA: [[0.16, 0.1, 0.17], [0.05, 0.035, 0.08]],
 };
 
 // The alpha each part writes: its number for the line. Two parts with different numbers get a line between them;
 // all of them are below anything else in the valley, so the line is only ever round him.
-const INK = { CLOAK: 0.03, HAT: 0.06, HAIR: 0.09, BOOTS: 0.12, TROUSERS: 0.15, SHIRT: 0.18, SKIN: 0.21, EYES: 0.09 };
+const INK = { CLOAK: 0.03, HAT: 0.06, HAIR: 0.09, BOOTS: 0.12, TROUSERS: 0.15, SHIRT: 0.18, SKIN: 0.21, EYES: 0.09, BLADE: 0.005, TSUKA: 0.105, TSUBA: 0.135, SAYA: 0.045 };
 
 /**
  * @param field the valley's meadow: its uniforms are the light he stands in
@@ -130,7 +144,7 @@ const INK = { CLOAK: 0.03, HAT: 0.06, HAIR: 0.09, BOOTS: 0.12, TROUSERS: 0.15, S
  */
 export async function createWanderer(field, onProgress, clothes = {}) {
   const palette = { ...CLOTHES, ...clothes };
-  const paint = (upper, { skinned = false, lower = upper, split = -10, inside = 0 } = {}) =>
+  const paint = (upper, { skinned = false, lower = upper, split = -10, inside = 0, blade = 0 } = {}) =>
     new THREE.ShaderMaterial({
       glslVersion: THREE.GLSL3,
       side: THREE.DoubleSide,
@@ -144,6 +158,8 @@ export async function createWanderer(field, onProgress, clothes = {}) {
         uInk: { value: new THREE.Vector2(INK[upper], INK[lower]) },
         uInside: { value: inside },
         uTrim: { value: new THREE.Color(0.95, 0.78, 0.4) },
+        uBlade: { value: blade },
+        uGleam: { value: -1 },
       },
       vertexShader: skinned ? skinnedVertex : plainVertex,
       fragmentShader: fragment,
@@ -207,6 +223,7 @@ export async function createWanderer(field, onProgress, clothes = {}) {
   group.add(man.object, cloakMesh);
   return {
     man,
+    paint,
     hat,
     cloak,
     group,
