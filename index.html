@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Reverence · a painted valley</title>
+    <title>경외(敬畏) · 물감으로 그린 계곡</title>
     <link rel="icon" href="data:," />
     <style>
       /* Yuji Syuku and Cormorant Garamond, both SIL Open Font License 1.1 (fonts/*-OFL.txt); only the parts of
@@ -21,6 +21,9 @@
       @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 400; src: url('./fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2'); }
       @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 400; font-style: italic; src: url('./fonts/cormorant-garamond-latin-400-italic.woff2') format('woff2'); }
       @font-face { font-family: 'Cormorant'; font-display: block; font-weight: 600; src: url('./fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2'); }
+      /* Nanum Myeongjo (SIL Open Font License 1.1, fonts/NanumMyeongjo-OFL.txt): Korean subset for the translated text */
+      @font-face { font-family: 'Nanum Myeongjo'; font-display: block; font-weight: 400; src: url('./fonts/nanum-myeongjo-ko-400-normal.woff2') format('woff2'); }
+      @font-face { font-family: 'Nanum Myeongjo'; font-display: block; font-weight: 700; src: url('./fonts/nanum-myeongjo-ko-700-normal.woff2') format('woff2'); }
       html,
       body {
         margin: 0;
@@ -28,7 +31,7 @@
         overflow: hidden;
         background: #07060f;
         color: #24323a;
-        font: 15px/1.4 Cormorant, Georgia, 'Times New Roman', serif;
+        font: 15px/1.4 Cormorant, 'Nanum Myeongjo', Georgia, 'Times New Roman', serif;
         user-select: none;
       }
       canvas {
@@ -48,7 +51,7 @@
       #loading {
         background: #07060f;
         color: #b9b2d6;
-        font: italic 20px Cormorant, Georgia, serif;
+        font: italic 20px Cormorant, 'Nanum Myeongjo', Georgia, serif;
         letter-spacing: 0.3em;
       }
       #start {
@@ -168,13 +171,13 @@
       @keyframes rise { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
       #words h1 {
         margin: 0;
-        font: 600 5.2vh/1 Cormorant, serif;
+        font: 600 5.2vh/1 Cormorant, 'Nanum Myeongjo', serif;
         letter-spacing: 0.55em;
         color: #fff3dc;
       }
       #words p {
         margin: 1.4vh 0 0;
-        font: italic 2.3vh/1.3 Cormorant, serif;
+        font: italic 2.3vh/1.3 Cormorant, 'Nanum Myeongjo', serif;
         letter-spacing: 0.12em;
         color: #e6dbf6;
       }
@@ -190,7 +193,7 @@
         right: 0;
         bottom: 15vh;
         text-align: center;
-        font: italic 2.4vh Cormorant, serif;
+        font: italic 2.4vh Cormorant, 'Nanum Myeongjo', serif;
         letter-spacing: 0.4em;
         color: #f2e8d6;
         text-shadow: 0 0 14px rgba(10, 6, 30, 0.9);
@@ -215,7 +218,7 @@
       #items li {
         position: relative;
         padding: 0.7vh 0 0.7vh 2.4vw;
-        font: 3vh/1.2 Cormorant, serif;
+        font: 3vh/1.2 Cormorant, 'Nanum Myeongjo', serif;
         letter-spacing: 0.22em;
         color: rgba(244, 236, 220, 0.62);
         cursor: pointer;
@@ -251,7 +254,7 @@
         position: absolute;
         right: 5vw;
         bottom: 4vh;
-        font: italic 1.7vh Cormorant, serif;
+        font: italic 1.7vh Cormorant, 'Nanum Myeongjo', serif;
         letter-spacing: 0.14em;
         color: rgba(220, 210, 235, 0.55);
       }
@@ -261,8 +264,8 @@
     <canvas id="view"></canvas>
     <div id="start">
       <div>
-        <b>Click to walk</b>
-        <span>W A S D · Shift to sprint · F to draw or sheathe · V first person · T for time of day</span>
+        <b>클릭해서 걷기</b>
+        <span>W A S D · Shift 달리기 · F 칼 뽑기·넣기 · V 1인칭 · T 시간대</span>
       </div>
     </div>
     <div id="note"></div>
@@ -273,22 +276,22 @@
       <div id="mark">
         <div id="kanji">畏敬</div>
         <div id="words">
-          <h1>REVERENCE</h1>
-          <p>a wandering beneath the heavens</p>
-          <p>in memory of Fable</p>
+          <h1>경외</h1>
+          <p>하늘 아래를 걷는 방랑</p>
+          <p>Fable을 기리며</p>
           <div class="rule"></div>
         </div>
       </div>
-      <div id="press">press any key</div>
+      <div id="press">아무 키나 누르세요</div>
       <ul id="items">
-        <li data-item="begin" class="on">Begin the walk</li>
-        <li data-item="hour">Hour<small id="hourName">Golden hour</small></li>
-        <li data-item="brush">Brush<small id="brushName">On</small></li>
+        <li data-item="begin" class="on">산책 시작</li>
+        <li data-item="hour">시간대<small id="hourName">황금빛 시간</small></li>
+        <li data-item="brush">붓터치<small id="brushName">켜짐</small></li>
       </ul>
-      <div id="hint">↑ ↓ to choose · ← → to change · enter</div>
+      <div id="hint">↑ ↓ 선택 · ← → 변경 · Enter</div>
       <div id="veil"></div>
     </div>
-    <div id="loading">Reverence</div>
+    <div id="loading">경외</div>
     <script type="module" src="./src/valley/main.js"></script>
   </body>
 </html>

@@ -18,6 +18,7 @@ Code MIT. Art in this repo CC0 1.0. Checked 2026-11-11.
 | `src/valley/katana.js`, the title in `index.html` and `main.js`, the heavens in `sky.js`, the synthesized sounds in `sounds.js` | Written for this remix (majveia/painted-valley). The sword, scabbard, moon, nebula, stars and every sound added are made in code | MIT; what it draws CC0 | Yes |
 | `public/fonts/yuji-syuku-*.woff2` | Yuji Syuku by the Yuji Project Authors, through Fontsource; only the subsets the title's characters are in | SIL Open Font License 1.1, `public/fonts/YujiSyuku-OFL.txt` | Yes |
 | `public/fonts/cormorant-garamond-*.woff2` | Cormorant Garamond by Christian Thalmann, through Fontsource | SIL Open Font License 1.1, `public/fonts/CormorantGaramond-OFL.txt` | Yes |
+| `public/fonts/nanum-myeongjo-ko-*.woff2` | Nanum Myeongjo by Naver, through Google Fonts; only the Korean characters the translated text uses (added by the Korean edition) | SIL Open Font License 1.1, `public/fonts/NanumMyeongjo-OFL.txt` | Yes |
 | `lib/patch-block.js` | Patch's block helper, from staging.patch.gg/patch-block.js | Patch's, shipped with every block | Yes |
 | `shots/` | Stills of this demo | CC0 1.0, Patch | Yes, in Git LFS |
 | three.js 0.186.1 | npm | MIT | Installed by npm; its notice ships as `THIRD-PARTY-NOTICES.md` |

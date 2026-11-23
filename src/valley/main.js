@@ -85,7 +85,7 @@ const FLOOR_SIZE = quality === 'low' ? 1024 : 1536;
 const hour0 = params.has('hour') ? Number(params.get('hour')) : 19;
 const groundJob = offThread({ job: 'ground', ...GROUND }, () => bakeGround({ heightAt, paint, ...GROUND }));
 const floorJob = offThread({ job: 'floor', size: FLOOR_SIZE }, () => ({ pixels: paintFloor(FLOOR_SIZE) }));
-await stage(0.04, 'Painting the sky');
+await stage(0.04, '하늘을 그리는 중');
 // Sound is made ready now, while the land is being made: opening the PC's audio can hold a page's thread for a
 // second or more, and here nothing is waiting on it. It only starts playing on the first click.
 const sounds = createSounds();
@@ -96,7 +96,7 @@ let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: stepped });
 } catch {
-  $('loading').textContent = 'Needs WebGL 2';
+  $('loading').textContent = 'WebGL 2가 필요합니다';
   throw new Error('no WebGL 2');
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, params.has('dpr') ? Number(params.get('dpr')) : 1.5));
@@ -139,7 +139,7 @@ const skyReady = (async () => {
   lapse('cloudsAt');
 })();
 mark('skyBegun');
-await stage(0.12, 'Laying out the valley');
+await stage(0.12, '계곡을 펼치는 중');
 const baked = await groundJob;
 mark('groundWait');
 const field = createField({
@@ -188,7 +188,7 @@ mark('strokes');
   field.uniforms.uHeroEye.value.set(START[0], field.heightAt(START[0], START[1]) + 1.68, START[1]);
 }
 mark('floor');
-await stage(0.3, 'Building the village');
+await stage(0.3, '마을을 짓는 중');
 const frame = createFrame(renderer, field, { samples: quality === 'low' ? 0 : 4, bloom: 0.1 });
 mark('frame');
 const sky = createSky(renderer, field, { parts: skyParts });
@@ -202,7 +202,7 @@ scene.add(sky.mesh, createHorizon(field, EXTENT / 2), trees.group, farWoods.grou
 frame.paint = params.has('paint') ? Number(params.get('paint')) : quality === 'low' ? 0 : quality === 'medium' ? 2 : 3;
 const paintWas = frame.paint || 3;
 mark('build');
-await stage(0.45, 'Planting trees');
+await stage(0.45, '나무를 심는 중');
 const stones = createStones(field);
 scene.add(stones.group);
 if (quality !== 'low' && params.get('seeds') !== '0') scene.add(createFluff(field, quality === 'medium' ? 200 : 320));
@@ -210,10 +210,10 @@ if (quality !== 'low' && params.get('seeds') !== '0') scene.add(createFluff(fiel
 // pick a time of day and hold it there, 0 lets it pass again, and , and . nudge it.
 let drift = params.has('drift') ? Number(params.get('drift')) : 1;
 const TIMES = [
-  { hour: 12.5, name: 'Noon' },
-  { hour: 15.5, name: 'Afternoon' },
-  { hour: 19, name: 'Golden hour' },
-  { hour: 20.3, name: 'Sunset' },
+  { hour: 12.5, name: '정오' },
+  { hour: 15.5, name: '오후' },
+  { hour: 19, name: '황금빛 시간' },
+  { hour: 20.3, name: '노을' },
 ];
 const DRIFT = (SUNSET - 15.5) / (20 * 60);
 let castAt = 0;
@@ -562,7 +562,7 @@ function titleChange(item, step) {
   }
   if (item === 'brush') {
     frame.paint = frame.paint ? 0 : paintWas;
-    $('brushName').textContent = frame.paint ? 'On' : 'Off';
+    $('brushName').textContent = frame.paint ? '켜짐' : '꺼짐';
   }
 }
 function showTitle() {
@@ -711,20 +711,20 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('keydown', (e) => {
   if (titleKey(e)) return;
   keys.add(e.code);
-  if (e.code === 'KeyF' && third && katana.toggle()) note(katana.drawn ? 'Draw' : 'Sheathe');
+  if (e.code === 'KeyF' && third && katana.toggle()) note(katana.drawn ? '발도' : '납도');
   // (after the last of them, round to the first again)
   if (e.code === 'KeyT') pickTime(Math.max(0, TIMES.findIndex((time) => time.hour > sky.hour + 0.05)));
   for (let i = 0; i < TIMES.length; i++) if (e.code === `Digit${i + 1}`) pickTime(i);
   if (e.code === 'Digit0') {
     drift = 1;
-    note('Time passing');
+    note('시간이 흐릅니다');
   }
   if (e.code === 'Comma') setHour(sky.hour - 0.25);
   if (e.code === 'Period') setHour(sky.hour + 0.25);
   if (e.code === 'KeyP') frame.paint = frame.paint ? 0 : paintWas;
   if (e.code === 'KeyV') {
     setThird(!third);
-    note(third ? 'Third person' : 'First person');
+    note(third ? '3인칭' : '1인칭');
   }
   if (e.code === 'Space') e.preventDefault();
 });
@@ -785,10 +785,10 @@ function tick(dt) {
 }
 
 mark('land');
-await stage(0.5, 'Painting the mountains');
+await stage(0.5, '산을 그리는 중');
 await skyReady;
 mark('skyWait');
-await stage(0.64, 'Painting the clouds');
+await stage(0.64, '구름을 그리는 중');
 setHour(hour0);
 setWind(params.has('wind') ? Number(params.get('wind')) : 4.5);
 setThird(third);
@@ -798,10 +798,10 @@ field.update(0, camera);
 sky.update(0, camera);
 await gpuDone();
 mark('clouds');
-await stage(0.78, 'Mixing paint');
+await stage(0.78, '물감을 섞는 중');
 await Promise.all([frame.compile(scene, camera), soundsReady]);
 mark('sceneShaders');
-await stage(0.9, 'Warming up');
+await stage(0.9, '준비하는 중');
 // real frames, each waited for, so the first the walker sees isn't the one that compiles: a full turn of the
 // clouds' strips, a few steps taken and the grass trodden
 if (!params.has('fast')) {
@@ -811,7 +811,7 @@ if (!params.has('fast')) {
   for (let i = 0; i < 44; i++) {
     tick(1 / 30);
     await gpuDone();
-    if (i % 11 === 10) await stage(0.9 + 0.08 * (i / 44), 'Warming up');
+    if (i % 11 === 10) await stage(0.9 + 0.08 * (i / 44), '준비하는 중');
   }
   keys.clear();
   input.keys.clear();
@@ -827,7 +827,7 @@ mark('warm');
 // the title, unless asked to begin at once (?notitle) or drawn by a test that places the eye itself
 if (!params.has('notitle') && third) {
   showTitle();
-  $('hourName').textContent = TIMES.find((time) => Math.abs(time.hour - sky.hour) < 0.05)?.name ?? 'Golden hour';
+  $('hourName').textContent = TIMES.find((time) => Math.abs(time.hour - sky.hour) < 0.05)?.name ?? '황금빛 시간';
   tick(1 / 60);
 }
 

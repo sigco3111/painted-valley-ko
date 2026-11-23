@@ -1,57 +1,54 @@
----
-kind: effect
-engine: three.js
----
+# 경외(敬畏) · 물감으로 그린 계곡 한글판
 
-# Reverence
+손으로 그린 애니메이션 영화 배경 같은 여름 계곡을 걸어다니는 three.js 데모입니다. 평평하고 깨끗한 색면, 소복이 쌓인 흰 구름, 매면이 하나하나 그려진 먼 산, 기와지붕 마을, 그리고 발밑에서도 붓자국이 둥글게 유지되는 초원으로 이루어져 있습니다. 밀짚모자에 푸른 망토를 두른 방랑자가 이 계곡을 걷습니다. 땅과 하늘은 모두 코드로 만들어졌습니다.
 
-*A remix of [painted valley](https://patch.gg/blendi/painted-valley), in memory of Fable.*
+이 저장소는 [Patch의 @majveia가 만든 Painted Valley(Reverence 리믹스)](https://patch.gg/majveia/painted-valley)([원본 소스](https://git.patch.gg/majveia/painted-valley.git))를 한국어로 옮긴 한글화 포크입니다. 원작의 라이선스(코드 MIT, 아트 CC0 1.0)에 따라 번역·배포하며, 원문 README는 [README.en.md](README.en.md)에 그대로 보존되어 있습니다.
 
-It opens like a film: black bars, the wind going over the grass, a wanderer standing with his katana drawn under a vast moon, and the title written in brush. Press a key for the choices (begin, the hour, the brush finish) and begin: he sheathes his blade, the bars draw back and the eye comes down behind him. Above the painted day the heavens show through: a river of nebula, two far spirals, stars, and a moon with a halo, faint at noon and full by sunset.
+![밀짚모자에 푸른 망토를 두른 방랑자가 빨간 지붕 마을 위의 초원 언덕에 서 있는 모습. 뒤로는 소복한 흰 구름 아래 산들이 펼쳐져 있다 (원작 자료)](shots/readme.jpg)
 
-**Added keys:** F draws or sheathes the katana. At the title, W A S D begin at once.
+## Reverence — 영화 같은 오프닝
+
+*Fable을 기리며, painted valley를 리믹스한 버전입니다.*
+
+영화처럼 시작합니다. 검은 레터박스, 풀 위를 지나는 바람, 커다란 달 아래 카타나를 뽑아 든 방랑자, 그리고 붓으로 쓴 제목. 아무 키나 누르면 선택지(시작, 시간대, 붓터치)가 나오고, 시작하면 그는 칼을 거두어들이고 레터박스가 걷히며 시점이 그의 뒤로 내려옵니다. 물감으로 그린 낮 하늘 너머로 천구가 비쳐 보입니다. 성운의 강, 멀리 있는 두 나선 은하, 별들, 그리고 후광을 두른 달이 정오에는 희미하게, 노을 질 무렵에는 또렷하게 드러납니다.
+
+**추가된 키:** F로 카타나를 뽑거나 거둡니다. 타이틀 화면에서 W A S D를 누르면 바로 시작합니다.
 
 | | |
 |---|---|
-| `src/valley/katana.js` | The sword and scabbard, the draw and the sheathe |
-| `src/valley/sky.js` | `heavens()` and `moon()`: the nebula, spirals, stars and moon; `sky.cosmos` overrides how much shows |
-| `src/valley/main.js` | The title: its camera, its choices and the way down into the walk |
-| `src/valley/sounds.js` | The draw and sheathe, the wind and the held chord, all made from noise and tones |
+| `src/valley/katana.js` | 검과 검집, 발도와 납도 |
+| `src/valley/sky.js` | `heavens()`와 `moon()`: 성운, 나선 은하, 별, 달. `sky.cosmos`로 얼마나 보일지 조정 |
+| `src/valley/main.js` | 타이틀: 카메라, 선택지, 산책으로 내려가는 연출 |
+| `src/valley/sounds.js` | 발도·납도 소리, 바람 소리와 긴 화음. 모두 노이즈와 톤으로 합성 |
 
-`?notitle` skips the title; `?hour=15.5` starts at another hour (the title starts at golden hour).
+`?notitle`로 타이틀을 건너뛰고, `?hour=15.5`로 다른 시간대에서 시작할 수 있습니다(타이틀은 황금빛 시간에서 시작합니다).
 
----
+## 데모 조작법
 
-# Painted valley
+클릭하면 마우스로 둘러보기, WASD 이동, Shift 달리기, Alt 걷기, Space 점프, 휠로 시점을 뒤로/앞으로. 게임패드도 됩니다. V를 누르면 방랑자의 눈(1인칭)으로 들어갔다 나옵니다. T로 시간대(정오, 오후, 황금빛 시간, 노을)를 바꾸고, 1~4로 바로 이동합니다. `,`와 `.`로 시간을 조금씩 움직이고, 0은 시간이 저절로 흐르게 합니다. P로 붓터치 마감을 끄고 켭니다. 할 일은 걷는 것뿐입니다. 언덕을 내려가 마을로, 강을 따라, 그리고 못까지 걸어 보세요.
 
-A summer valley to walk through, drawn in the look of hand-painted animated film backgrounds: flat, clean colour, heaped white cloud, far mountains with every face painted, a village of tiled roofs, and a meadow whose brush marks stay round under your feet. A wanderer in a straw hat and a blue cloak walks it, drawn as a film draws its people: flat colour and an inked line. The land and sky are made in code, in three.js.
+![초원에서 바라본 마을 (원작 자료)](shots/village.jpg)
 
-![A wanderer in a straw hat and a blue cloak on a meadow hill above a village of red roofs, mountains under heaped white clouds behind](shots/readme.jpg)
+![황금빛 시간의 같은 언덕 (원작 자료)](shots/sunset.jpg)
 
-**In the demo:** click to look with the mouse, WASD to move, Shift to sprint, Alt to walk, Space to jump, the wheel to bring the eye in or out. A gamepad works too. V goes into his own eyes and back. T changes the time of day (noon, afternoon, golden hour, sunset) and 1 to 4 go straight to one; `,` and `.` nudge the hour, 0 lets the day pass by itself. P takes the paint finish off and on. There is nothing to do but walk: down the hill to the village, along the river, up to the tarn.
+이 프로젝트는 필터가 아니라 출발점입니다. 완성된 게임 위에 덧씌울 수는 없습니다. 이 느낌은 장소의 각 부분을 어떻게 그리느냐에서 나오기 때문입니다. 이 계곡에서 시작해 바꾸고, 여러분의 게임을 담으세요.
 
-![The village from the meadow](shots/village.jpg)
+## 아이디어
 
-![The same hill at golden hour](shots/sunset.jpg)
+손으로 그린 배경이 '그림'으로 읽히는 이유는 빼 놓은 것에 있습니다. 사진 텍스처도, 모든 크기에서의 노이즈도 없고, 색조는 적으며, 디테일은 붓이 놓였을 자리에만 있습니다.
 
-It is a starting point, not a filter. You can't lay it over a finished game: the look comes from how each part of the place is painted. Start from the valley, change it, put your own game in it.
+- **물감처럼 고른 적은 색조.** 모든 사물은 빛받은 색과 그림자 색, 그리고 그 사이의 짧은 단계를 가집니다. 하나의 공유 팔레트(`src/valley/world.js`의 `meadowGreen`, `meadowLight`)가 풀, 그 아래 땅, 먼 들판과 언덕을 칠해 계곡 전체가 한 장의 그림이 됩니다.
+- **노이즈가 아니라 붓자국.** 초원은 경사를 따라 흐르는 가는 선과, 산책이 시작되는 언덕에서 바라본 모습 그대로 배치된 덧칠(`heroPaint`)로 이루어져, 그 자리에서는 둥글게 보이다가 얼룩처럼 보이기 전에 사라집니다. 먼 땅에는 미세한 무늬가 아예 없습니다. 그랬다면 아른거렸을 테니까요.
+- **먼 것은 한 번만 그립니다.** 산은 하이트맵을 한 장의 그림 띠(빛받은 색, 그림자 색, 빛이 닿는 곳, 대기, 구름 띠)로 레이 마칭해 두고, 하늘이 시간대에 맞춰 그 빛을 다시 칠합니다. 바위는 면으로 깎이고, 낮은 비탈에는 둥근 수관이 올라가며, 세 줄기의 앞산들이 안개 속으로 물러납니다. 먼 것은 프레임당 비용이 들지 않습니다.
+- **구름은 솜뭉치.** 각 적운은 구를 쌓아 만든 뒤 큐브맵에 한 번 레이 마칭하고 평평한 색조를 입힙니다. 흰 윗면, 차가운 그림자, 따뜻한 밑면. 일부러 움직이지 않고, 시간대마다 다시 그릴 때 빛이 바뀝니다.
+- **평원도 한 장의 그림.** 들판, 생울타리, 길과 강은 하나의 텍스처로 그려지고, 나무와 과수원, 포플러와 풍차가 작은 그림 카드처럼 그 위에 서 있습니다.
+- **건물은 배경 화가가 디테일을 주는 방식 그대로.** 기와 줄, 처마 밑 얼룩이 든 회벽, 덧문, 문, 다락 창, 굴뚝까지 전부 벽의 좌표만으로 셰이더 안에서 그립니다.
+- **프레임 위의 마감**(작은 Kuwahara 패스)이 모든 것을 붓터치처럼 둥글게 다듬고, 하늘처럼 제외해 달라고 한 것들은 남겨 둡니다.
+- **사람은 물감이 아니라 셀.** 영화는 배경을 그리고 사람은 잉크로 그립니다. 그 차이가 이 느낌의 큰 부분입니다. 방랑자는 세 가지 평면 색조(빛, 그림자, 주름 깊은 곳)로, 경계는 깨끗하게 나뉩니다. 그림자 색은 밝은 색을 어둡게 하는 게 아니라 보여야 할 모습으로 섞습니다. 그의 각 부분은 프레임의 알파에 작은 숫자를 쓰고, 마지막 패스가 서로 다른 숫자가 만나는 곳에 선을 긋습니다. 다른 물체가 앞에 있는 곳은 제외해서, 그가 서 있는 풀밭에는 선이 그어지지 않습니다. 망토는 진짜 천이고, 자락에서 올라오는 주름 그림자 몇 개는 화가가 하듯 그려 넣었습니다. 풀 위의 그림자는 해가 내려갈수록 길어지는 깨끗한 가장자리의 도형입니다.
 
-## The idea
+## 게임에 사용하기
 
-A painted background reads as paint because of what is left out: no photographed texture, no noise at every scale, few tones, and detail only where a brush would have put it.
-
-- **Few tones, chosen as paint.** Each thing has a lit colour and a shade colour and a short step between them. One shared palette (`meadowGreen`, `meadowLight` in `src/valley/world.js`) paints the grass, the ground under it, the far fields and the hills, so the valley is one picture.
-- **Marks, not noise.** The meadow is one slow green with thin strokes that follow the slope, and dabs laid out as they would look from the hill where the walk starts, so they are round from there and fade before they could turn to speckle (`heroPaint`). Far ground has no fine pattern at all: it would shimmer.
-- **Far things are painted once.** The mountains are a height map marched into a strip of paint (lit colour, shade colour, where the light falls, air, a bank of cloud), which the sky then lights for the hour. Rock is cut into facets, the lower slopes carry rounded tree crowns, and three ranks of foothills step back in the haze. Nothing far costs anything per frame.
-- **Clouds are heaps.** Each cumulus is a pile of spheres, ray-marched once into a cube map and given flat tones: white top, cool shade, a warm underside. They stand still on purpose; a redraw per hour changes their light.
-- **The plain is a painting too.** Fields, hedges, roads and the river are drawn into one texture, with trees, orchards, poplars and a mill standing on it as small painted cards.
-- **Buildings carry detail the way a background painter gives it:** rows of tiles, limewash with stains under the eaves, shutters, doors, attic windows, chimneys, all drawn in the shader from the wall's own coordinates.
-- **A finish over the frame** (a small Kuwahara pass) rounds everything into strokes, and leaves the sky and anything else that asks to be left alone.
-- **People are cel, not paint.** A film paints its backgrounds and inks its people, and the difference is most of the look. The wanderer is three flat tones (in the light, in the shade, the deep of a fold) with a clean turn between them; shade colours are mixed as they should look, not the light ones made darker. Each part of him writes a small number into the frame's alpha, and the last pass draws a line wherever two different numbers meet, except where the other thing is in front of him, so grass he stands in is not inked. His cloak is real cloth, with a few fold shadows drawn rising from the hem as a painter would put them. His shadow on the grass is a shape with a clean edge that grows as the sun comes down.
-
-## Use it in a game
-
-It is a place with its own renderer set-up, not a material: `src/valley/main.js` is the whole demo and the thing to start from. Built on three 0.186, WebGL2.
+이것은 머티리얼이 아니라 자체 렌더러 설정을 가진 장소입니다. `src/valley/main.js`가 데모 전체이자 시작점입니다. three 0.186, WebGL2 기반입니다.
 
 ```js
 import { createField, createFrame } from './src/lib/index.js';
@@ -59,57 +56,68 @@ import { createSky } from './src/valley/sky.js';
 import { createTrees } from './src/valley/trees.js';
 import { heightAt, START } from './src/valley/world.js';
 
-const field = createField({ /* the meadow: grass, flowers, the ground; see main.js */ });
+const field = createField({ /* 초원: 풀, 꽃, 땅. main.js 참고 */ });
 const frame = createFrame(renderer, field, { samples: 4, bloom: 0.1 });
-const sky = createSky(renderer, field, { /* clouds and mountains are painted in here */ });
+const sky = createSky(renderer, field, { /* 구름과 산은 여기서 그려집니다 */ });
 scene.add(sky.mesh, createTrees(field).group);
 
-frame.paint = 3;                    // the paint finish: 0 is off
-sky.setHour(15.5);                  // 12.5 noon to 20.4 sunset
+frame.paint = 3;                    // 붓터치 마감: 0이면 끔
+sky.setHour(15.5);                  // 정오 12.5부터 노을 20.4까지
 camera.position.y = heightAt(x, z) + 1.7;
 frame.render(scene, camera);
 ```
 
-- **Your own things in it.** Add meshes to the scene as usual. To be left out of the paint finish (a crisp character, a HUD in the world), write alpha below 0.6. To sit in the valley's light, read the sun and sky colours from `field.uniforms`.
-- **Your own people in it.** `src/valley/wanderer.js` is the cel look: give any mesh, rigged or not, its material with a light and a shade colour and a line number below 0.23 (parts with different numbers get a line between them). `field.uniforms.uWalker` (x, z, how dark, how long) lays one walker's shadow on the meadow. His movement, camera and cloth are in `src/figure/`, on Rapier, and come from Patch's oil paint block (`blendi/oil-paint`).
-- **Change the place.** `src/valley/world.js` holds the land: `heightAt`, the paths, the tarn, the river, where the village and the woods are. `village.js` builds houses from eight shapes. `backdrop.js` holds the mountains' outline, `clouds.js` where each cloud stands.
-- **Change the hour.** `sky.js` has one set of colours per hour key; add a night, a storm, a dawn.
-- **Performance mode.** `?quality=low` or `medium` draws less: fewer blades, no seed fluff, a lighter finish.
+- **여러분의 사물 넣기.** 평소처럼 씬에 메시를 추가하면 됩니다. 붓터치 마감에서 빼려면(선명한 캐릭터, 월드 내 HUD) 알파를 0.6 아래로 쓰세요. 계곡의 빛에 맞추려면 `field.uniforms`에서 태양과 하늘 색을 읽으세요.
+- **여러분의 사람 넣기.** `src/valley/wanderer.js`가 셀 룩입니다. 리깅 여부와 상관없이 어떤 메시에도 빛 색과 그림자 색, 0.23 아래의 선 번호로 재질을 입힐 수 있습니다(번호가 다른 부분 사이에 선이 그어집니다). `field.uniforms.uWalker`(x, z, 어둡기, 길이)는 초원 위에 방랑자의 그림자 하나를 깝니다. 그의 움직임, 카메라, 천은 `src/figure/`에 있고, Rapier 위에서 돌며, Patch의 유화 블록(`blendi/oil-paint`)에서 가져왔습니다.
+- **장소 바꾸기.** `src/valley/world.js`가 땅입니다: `heightAt`, 오솔길, 못, 강, 마을과 숲의 위치. `village.js`는 여덟 가지 형태로 집을 만듭니다. `backdrop.js`는 산의 윤곽, `clouds.js`는 각 구름의 위치입니다.
+- **시간대 바꾸기.** `sky.js`에 시간대 키마다 색 세트가 있습니다. 밤, 폭풍, 새벽을 추가해 보세요.
+- **성능 모드.** `?quality=low`나 `medium`은 더 적게 그립니다. 풀잎 수 감소, 씨앗 솜털 제거, 가벼운 마감.
 
-## What is where
+## 파일 구성
 
 | | |
 |---|---|
-| `src/valley/main.js` | The demo: start-up, the walker, the keys, the loop |
-| `src/valley/world.js` | The land and the shared palette |
-| `src/valley/sky.js`, `clouds.js`, `backdrop.js` | The sky and its hours, the clouds, the far mountains and foothills |
-| `src/valley/horizon.js`, `floor.js`, `farwoods.js` | The plain out to 6 km, its painted fields and roads, its trees and mill |
-| `src/valley/village.js` | The houses, church and barns |
-| `src/valley/trees.js`, `dressing.js`, `water.js` | Near trees and bushes with their shade, stones and drifting seeds, the tarn |
-| `src/valley/strokes.js` | The brush-dab texture the ground is painted with |
-| `src/valley/sounds.js` | The sound, from recordings (see below) |
-| `src/valley/wanderer.js` | The wanderer's look: cel colour, his hat and cloak, what the line is drawn from |
-| `src/figure/` | The starter man and how he moves: `man.js` (loading), `animator.js`, `player.js` (a Rapier character), `input.js`, `camera.js` (the eye behind him), `cloak.js` (cloth) |
-| `src/lib/` | The grass, flowers, ground and frame, from Patch's grass block (`blendi/touch-grass`), restyled for this look |
-| `tools/` | Headless stills (`shots.mjs`, and `walk.mjs` for the wanderer), frame time (`fps.mjs`), a first visit (`cold.mjs`), the sound cuts (`sounds.mjs`), `compact-glb.mjs` (a clip file with only what its clips use) |
+| `src/valley/main.js` | 데모: 시작, 방랑자, 키 입력, 루프 |
+| `src/valley/world.js` | 땅과 공유 팔레트 |
+| `src/valley/sky.js`, `clouds.js`, `backdrop.js` | 하늘과 시간대, 구름, 먼 산과 앞산들 |
+| `src/valley/horizon.js`, `floor.js`, `farwoods.js` | 6km까지 이어지는 평원, 그려진 들판과 길, 나무와 풍차 |
+| `src/valley/village.js` | 집, 교회, 헛간 |
+| `src/valley/trees.js`, `dressing.js`, `water.js` | 그늘 있는 가까운 나무와 덤불, 돌과 떠다니는 씨앗, 못 |
+| `src/valley/strokes.js` | 땅을 칠하는 붓자국 텍스처 |
+| `src/valley/sounds.js` | 소리(아래 '소리' 참고) |
+| `src/valley/wanderer.js` | 방랑자의 모습: 셀 색, 모자와 망토, 선이 그어지는 기준 |
+| `src/figure/` | 스타터 맨과 움직임: `man.js`(로딩), `animator.js`, `player.js`(Rapier 캐릭터), `input.js`, `camera.js`(그의 뒤의 시점), `cloak.js`(천) |
+| `src/lib/` | 풀, 꽃, 땅, 프레임. Patch의 풀 블록(`blendi/touch-grass`)에서 가져와 이 느낌으로 다시 스타일링 |
+| `tools/` | 헤드리스 스틸 컷(`shots.mjs`, 방랑자용 `walk.mjs`), 프레임 시간(`fps.mjs`), 첫 방문(`cold.mjs`), 소리 자르기(`sounds.mjs`), `compact-glb.mjs`(클립이 쓰는 것만 남긴 파일) |
 
-## Sound
+## 소리
 
-The released demo has wind in the grass, leaves, birds and insects, water at the tarn and crickets at dusk. Those five recordings come from the Sonniss GDC bundles, which may be used in a game but not passed on as files, so they are **not in this repo**: a build from it has footsteps only. [MISSING_ASSETS.md](MISSING_ASSETS.md) names each recording, where to get it and the one command that cuts it back in.
+공개된 원작 데모에는 풀 속 바람, 나뭇잎, 새와 벌레, 못가의 물소리, 해 질 녘 귀뚜라미 소리가 있습니다. 이 다섯 개의 녹음은 Sonniss GDC 번들에서 가져온 것으로, 게임 안에서 사용하는 것은 허용되지만 파일 그대로 전달하는 것은 금지되어 **이 저장소에도 포함되어 있지 않습니다**. 이 저장소만으로 빌드하면 발자국 소리만 들립니다. [MISSING_ASSETS.md](MISSING_ASSETS.md)에 각 녹음의 이름, 얻는 곳, 다시 넣는 명령 하나가 적혀 있습니다. 한글판 배포본도 원작과 같은 조건을 지켜 환경음은 포함하지 않았습니다.
 
-## Limits
+## 한계
 
-- three.js on WebGL2 only.
-- One valley, about 2 km across, with painted land out to the mountains. Walk past its edge and you are turned back.
-- Noon to sunset only: there is no night, and the clouds don't move.
-- You can't go into the houses, and nobody lives there yet.
-- The wanderer is one man with one face, made to be seen from a few metres. Through his own eyes you see no body or hands.
-- Measured only on an RTX 4090 at 1080p. A first visit is ready in about 8 seconds there; the demo downloads about 13 MB.
+- WebGL2 위의 three.js 전용입니다.
+- 계곡 하나, 약 2km 너비에 산까지 이어지는 그려진 땅. 가장자리를 지나가면 방향이 돌려집니다.
+- 정오부터 노을까지만. 밤은 없고, 구름은 움직이지 않습니다.
+- 집 안에는 들어갈 수 없고, 아직 아무도 살지 않습니다.
+- 방랑자는 한 얼굴의 한 사람으로, 몇 미터 거리에서 보기 위해 만들어졌습니다. 그의 눈으로 볼 때는 몸이나 손이 보이지 않습니다.
+- RTX 4090, 1080p에서만 측정되었습니다. 첫 방문 준비는 그 환경에서 약 8초, 다운로드는 약 13MB입니다.
 
-## Build
+## 빌드
 
-`npm install`, then `npm run build`: the demo is in `dist/` with `index.html` at the top. `npm run serve` serves it on port 5383. The tools in `tools/` drive it headless with Playwright: set `CHROME` to a Chromium of your own if Playwright has none.
+`npm install` 후 `npm run build`: `dist/`에 데모가 만들어지고 `index.html`이 맨 위에 있습니다. `npm run serve`는 5383 포트에서 서빙합니다. `tools/`의 도구들은 Playwright로 헤드리스 구동합니다. Playwright에 Chromium이 없으면 `CHROME`으로 직접 지정하세요.
 
-## Credits
+## 한글화 내용
 
-Code MIT, art CC0 1.0. The wanderer is Patch's starter man (a MakeHuman figure, CC0) with clips from Quaternius' Universal Animation Library (CC0) and Patch's own (CC0). Physics by Rapier (Apache-2.0). The earth of the footpaths is two ambientCG grounds (CC0); the footsteps are Kenney's (CC0). Everything else you see is made in code. Every part and its source is in [LICENCE-NOTES.md](LICENCE-NOTES.md).
+- 타이틀 화면(제목·부제·메뉴·안내문), 로딩 단계 문구 8개, 시간대 이름 4개, 조작 안내, 상태 메시지(발도/납도, 1인칭/3인칭, 시간 흐름) 등 사용자에게 보이는 문구를 한국어로 번역했습니다.
+- 원본 폰트(Yuji Syuku, Cormorant Garamond)는 한글을 포함하지 않아, 명조체 느낌이 어울리는 **나눔명조(Nanum Myeongjo, OFL)** 웹폰트를 화면에 쓰는 글자만 추린 서브셋(각 약 12KB)으로 추가했습니다. 영문과 한자는 원본 폰트 그대로 표시됩니다.
+- 붓으로 쓴 세로 타이틀 畏敬(한자)은 원작 그대로 유지하고, 한글 제목 '경외'를 곁들였습니다.
+- 코드와 원작의 구조·식별자·주석은 원본 그대로 유지했습니다.
+
+### 한글판 실행 화면
+
+배포 후 실제 실행 화면 캡처를 여기에 추가합니다.
+
+## 라이선스
+
+코드 MIT, 아트 CC0 1.0. 방랑자는 Patch의 스타터 맨(MakeHuman 피규어, CC0)에 Quaternius의 Universal Animation Library(CC0)와 Patch 자체 클립(CC0)으로 움직입니다. 물리는 Rapier(Apache-2.0), 오솔길의 흙은 ambientCG의 두 텍스처(CC0), 발자국 소리는 Kenney(CC0)입니다. 그 외에 보이는 모든 것은 코드로 만들어졌습니다. 모든 부분과 출처는 [LICENCE-NOTES.md](LICENCE-NOTES.md)에 있습니다. 한글 폰트 나눔명조는 SIL Open Font License(`public/fonts/NanumMyeongjo-OFL.txt`)입니다.
