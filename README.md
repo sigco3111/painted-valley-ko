@@ -116,7 +116,13 @@ frame.render(scene, camera);
 
 ### 한글판 실행 화면
 
-배포 후 실제 실행 화면 캡처를 여기에 추가합니다.
+배포된 한글판(<https://sigco3111.github.io/painted-valley-ko/>)의 실제 실행 화면입니다.
+
+![한글판 타이틀 화면](ko-title.jpg)
+
+![한글판 메뉴](ko-menu.jpg)
+
+![한글판 산책 장면](ko-walk.jpg)
 
 ## 라이선스
 
